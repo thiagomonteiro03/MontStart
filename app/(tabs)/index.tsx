@@ -1,11 +1,19 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, FlatList } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import Checkbox from 'expo-checkbox';
+import { useState } from 'react';
 
-export default function HomeScreen() {
+interface CheckboxSectionProps {
+  title: String;
+  isChecked: boolean;
+  setChecked: (value: boolean) => void;
+}
+
+export default function HomeScreen(){
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -15,43 +23,57 @@ export default function HomeScreen() {
           style={styles.reactLogo}
         />
       }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Cara isso é futuro!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
+
+      <TitleSection/>
+      <CheckboxSection/>
+      
+      
     </ParallaxScrollView>
   );
+}
+
+function TitleSection() {
+  return (
+    <ThemedView style={styles.titleContainer}>
+      <ThemedText type="title">To-do list</ThemedText>
+    </ThemedView>
+  );
+}
+
+const Item = ({title, isChecked, setChecked}: CheckboxSectionProps) => (
+  <ThemedView style= {styles.section}>
+          <Checkbox style= {styles.checkbox} value={isChecked} onValueChange={setChecked} />
+          <ThemedText style= {styles.paragraph}> {title}</ThemedText>
+        </ThemedView>
+);
+
+function CheckboxSection() {
+  const [data, setData] = useState([
+    { id: 1, txt: 'first check', isChecked: false },
+    { id: 2, txt: 'second check', isChecked: false },
+    { id: 3, txt: 'third check', isChecked: false },
+  ]);
+  const [isChecked, setChecked] = useState(false)
+
+  return(
+    <ThemedView style={styles.checkboxContainer}>
+      <FlatList
+      data={data}
+      renderItem={({item}) => 
+      <Item 
+      title={item.txt} 
+      isChecked={item.isChecked} 
+      setChecked={ () => {
+        setData((prevData) =>
+          prevData.map((el) =>
+            el.id === item.id ? { ...el, isChecked: !el.isChecked } : el
+          )
+        );
+      } } 
+      />}
+      />
+      </ThemedView>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -60,9 +82,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  checkboxContainer: {
+    flex: 1,
+    marginHorizontal: 16,
+    marginVertical: 32,
+  },
+  section: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  paragraph: {
+    fontSize: 20,
+  },
+  checkbox: {
+    margin: 8,
   },
   reactLogo: {
     height: 178,
