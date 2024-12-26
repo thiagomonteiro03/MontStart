@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ThemedView } from '../ThemedView'
+import { ThemedView } from '../../ThemedView'
 import { StyleSheet, TouchableWithoutFeedback, ViewStyle } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
