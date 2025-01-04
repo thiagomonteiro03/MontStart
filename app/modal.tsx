@@ -3,15 +3,38 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, Button, Platform } from "react-native";
 import { TouchableWithoutFeedback, GestureHandlerRootView } from "react-native-gesture-handler";
+
 import { router } from "expo-router";
 
 import { EventRepository } from '../src/data/repositories/EventRepository';
 import uuid from 'react-native-uuid';
+import RNDateTimePicker, { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 export default function ModalScreen() {
   const [eventName, setEventName] = useState("");
+
+  const [date, setDate] = useState(new Date());  // Initialize with the current time
+
+  const onChange = (event: any, selectedDate?: Date) => {
+    setDate(selectedDate || date);  // Update time state when a new time is selected
+  };
+  const showMode = (currentMode: string) => {
+    DateTimePickerAndroid.open({
+      value: date,
+      onChange,
+      is24Hour: true,
+    });
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -37,6 +60,25 @@ export default function ModalScreen() {
             onChangeText={setEventName}
             placeholder="Nome do evento"
           />
+
+          {
+            Platform.OS === "ios"?(
+              <RNDateTimePicker
+                value={date}
+                mode={'date'} 
+                onChange={onChange} 
+              />
+            ): (
+              <ThemedView>
+                <Button onPress={showDatepicker} title="Show date picker!" />
+                <Button onPress={showTimepicker} title="Show time picker!" />
+                <ThemedText>selected: {date.toLocaleString()}</ThemedText>
+              </ThemedView>
+            )
+          }
+
+
+
 
           <TouchableOpacity
             style={styles.buttonContainer}

@@ -17,7 +17,6 @@ export default function TabTwoScreen() {
 
   const fetchEvents = async () => {
     const fetchedEvents = await EventRepository.loadEvents();
-    console.log("Fetched Events:", fetchedEvents);
     setEvents(fetchedEvents);
   };
 
