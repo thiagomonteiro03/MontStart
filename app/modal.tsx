@@ -2,19 +2,13 @@ import ShadowTextInput from "@/components/my-components/ShadowTextInput";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { MaterialIcons } from "@expo/vector-icons";
-import React, { Component, useState } from "react";
-import { TextInput, StyleSheet, TouchableHighlight, TouchableOpacity } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { Button } from "@react-navigation/elements";
-import {
-  BaseButton,
-  BorderlessButton,
-  NativeViewGestureHandler,
-  RectButton,
-  TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
-import { GestureHandlerRootView } from "react-native-gesture-handler"; // Importar o GestureHandlerRootView
+import React, { useState } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { TouchableWithoutFeedback, GestureHandlerRootView } from "react-native-gesture-handler";
 import { router } from "expo-router";
+
+import { EventRepository } from '../src/data/repositories/EventRepository';
+import uuid from 'react-native-uuid';
 
 export default function ModalScreen() {
   const [eventName, setEventName] = useState("");
@@ -46,8 +40,18 @@ export default function ModalScreen() {
 
           <TouchableOpacity
             style={styles.buttonContainer}
-            onPress={router.back}
-          >
+            onPress={ async (event) => {
+              await EventRepository.saveEvents([
+                  {
+                    id: uuid.v4(),
+                    name: eventName,
+                    date: new Date(),
+                  }
+                ]);
+                router.back();
+            }
+            }
+            >
             <ThemedText style={styles.textContainer}>Salvar</ThemedText>
           </TouchableOpacity>
         </ThemedView>

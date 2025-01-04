@@ -1,20 +1,50 @@
-import { StyleSheet, Button } from 'react-native';
+import { StyleSheet, FlatList } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import FabButton from '@/components/buttons/FabButton';
+import FabButton from '@/components/my-components/buttons/FabButton';
+
+import { Event } from '../../src/domain/models/Event';
+import { EventRepository } from '../../src/data/repositories/EventRepository';
+
 
 export default function TabTwoScreen() {
   const router = useRouter()
-  const [showAddEventModal, setAddEventModal] = useState<boolean>(false);
+  const [events, setEvents] = useState<Event[]>([]);
+
+  const fetchEvents = async () => {
+    const fetchedEvents = await EventRepository.loadEvents();
+    console.log("Fetched Events:", fetchedEvents);
+    setEvents(fetchedEvents);
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  useFocusEffect(() => {
+    fetchEvents();
+  });
 
   return (
     <ThemedView style={styles.container}>
 
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Events</ThemedText>
+      </ThemedView>
+
+      <ThemedView>
+        <FlatList
+          data={events}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <ThemedText>{`${item.name}`}</ThemedText>
+          )}
+        />
+
       </ThemedView>
 
       <FabButton 
