@@ -1,10 +1,10 @@
 import { Image, StyleSheet, FlatList } from 'react-native';
 
-import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import Checkbox from 'expo-checkbox';
 import { useState } from 'react';
+import SimpleTextInput from '@/components/text-inputs/SimpleTextInput';
 
 interface CheckboxSectionProps {
   title: String;
@@ -13,9 +13,9 @@ interface CheckboxSectionProps {
 }
 
 export default function HomeScreen(){
-
+  
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={styles.screenContainer}>
 
       <TitleSection/>
       <CheckboxSection/>
@@ -35,9 +35,9 @@ function TitleSection() {
 
 const Item = ({title, isChecked, setChecked}: CheckboxSectionProps) => (
   <ThemedView style= {styles.section}>
-          <Checkbox style= {styles.checkbox} value={isChecked} onValueChange={setChecked} />
-          <ThemedText style= {styles.paragraph}> {title}</ThemedText>
-        </ThemedView>
+      <Checkbox style= {styles.checkbox} value={isChecked} onValueChange={setChecked} />
+      <ThemedText style= {styles.paragraph}> {title}</ThemedText>
+  </ThemedView>
 );
 
 function CheckboxSection() {
@@ -47,38 +47,57 @@ function CheckboxSection() {
     { id: 3, txt: 'third check', isChecked: false },
   ]);
   const [isChecked, setChecked] = useState(false)
-
-  return(
+  const [itemName, setItemName] = useState("");
+  
+  return (
     <ThemedView style={styles.checkboxContainer}>
       <FlatList
-      data={data}
-      renderItem={({item}) => 
-      <Item 
-      title={item.txt} 
-      isChecked={item.isChecked} 
-      setChecked={ () => {
-        setData((prevData) =>
-          prevData.map((el) =>
-            el.id === item.id ? { ...el, isChecked: !el.isChecked } : el
-          )
-        );
-      } } 
-      />}
+        data={data}
+        renderItem={({ item }) => (
+          <Item
+            title={item.txt}
+            isChecked={item.isChecked}
+            setChecked={() => {
+              setData((prevData) =>
+                prevData.map((el) =>
+                  el.id === item.id ? { ...el, isChecked: !el.isChecked } : el
+                )
+              );
+            }}
+          />
+        )}
+        ListFooterComponent={
+          <ThemedView style={styles.section}>
+            <Checkbox style={styles.checkbox} value={false} disabled={true} />
+            <SimpleTextInput
+              value={itemName}
+              onChangeText={setItemName}
+              placeholder="adicione outro item..."
+            />
+          </ThemedView>
+        }
       />
-      </ThemedView>
-  )
+    </ThemedView>
+  );
 }
 
 const styles = StyleSheet.create({
-  container:{
+  screenContainer:{
     flex: 1,
     padding: 25,
     paddingTop: 100,
+  },
+  container: {
+    flex: 1,
+    padding: 16,
   },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+  },
+  flatList: {
+    maxHeight: 200, 
   },
   checkboxContainer: {
     flex: 1,
@@ -94,12 +113,5 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     margin: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
   },
 });

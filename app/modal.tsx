@@ -1,4 +1,5 @@
-import ShadowTextInput from "@/components/my-components/ShadowTextInput";
+import ShadowTextInput from "@/components/text-inputs/ShadowTextInput";
+import SimpleTextInput from "@/components/text-inputs/SimpleTextInput";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -56,6 +57,12 @@ export default function ModalScreen() {
           </ThemedText>
 
           <ShadowTextInput
+            value={eventName}
+            onChangeText={setEventName}
+            placeholder="Nome do evento"
+          />
+
+          <SimpleTextInput
             value={eventName}
             onChangeText={setEventName}
             placeholder="Nome do evento"
