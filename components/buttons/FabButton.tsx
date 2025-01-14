@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { ThemedView } from '../../ThemedView'
+import React, { Component } from 'react';
 import { StyleSheet, TouchableWithoutFeedback, ViewStyle } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { ThemedView } from '../ThemedView';
 
 interface FabButtonProps {
     style?: ViewStyle,

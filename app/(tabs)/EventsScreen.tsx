@@ -5,10 +5,10 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import FabButton from '@/components/my-components/buttons/FabButton';
 
 import { Event } from '../../src/domain/models/Event';
 import { EventRepository } from '../../src/data/repositories/EventRepository';
+import FabButton from '@/components/buttons/FabButton';
 
 
 export default function TabTwoScreen() {

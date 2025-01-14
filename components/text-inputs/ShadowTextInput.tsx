@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { StyleSheet, TextInput, TextStyle, ViewStyle } from 'react-native';
+import { StyleSheet, TextInput, TextStyle } from 'react-native';
 
 interface ShadowTextInputProps {
   value: string;
